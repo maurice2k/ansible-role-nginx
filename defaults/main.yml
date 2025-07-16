@@ -1,0 +1,33 @@
+---
+### This file contains the default variables for the nginx role
+
+# list of additional packages to install (i.e. nginx-extras)
+nginx_packages: []
+
+# environment used for nginx file structure
+nginx_environment: ""
+
+## Further variables that can be modified, but don't require
+## modification in most cases
+
+# default packages that will always be installed
+nginx_default_packages:
+  - nginx
+  - nginx-common
+
+# files from nginx_sites_files will be copied to /etc/nginx/sites-enabled/
+nginx_sites_files: "{{ playbook_dir }}/files/nginx/{{ nginx_environment ~ '/' }}sites/*"
+
+# files from nginx_modules_files will be copied to /etc/nginx/modules-enabled/
+nginx_modules_files: "{{ playbook_dir }}/files/nginx/{{ nginx_environment ~ '/' }}modules/*"
+
+# files from nginx_ssl_files will be copied to {{ nginx_ssl_server_path }}
+# HINT: nginx_ssl_files is a directory, not a glob pattern
+nginx_ssl_files: "{{ playbook_dir }}/files/nginx/{{ nginx_environment ~ '/' }}ssl/"
+nginx_ssl_server_path: "/etc/nginx/ssl/"
+
+# files from nginx_snippets_files will be copied to /etc/nginx/conf.d/
+nginx_snippets_files: "{{ playbook_dir }}/files/nginx/{{ nginx_environment ~ '/' }}snippets/*"
+
+# files from nginx_confd_files will be copied to /etc/nginx/conf.d/
+nginx_confd_files: "{{ playbook_dir }}/files/nginx/{{ nginx_environment ~ '/' }}conf.d/*"

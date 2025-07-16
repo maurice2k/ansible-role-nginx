@@ -1,0 +1,50 @@
+---
+- name: Copy conf.d files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/nginx/conf.d/{{ item | basename | regex_replace('(.j2)$', '') }}"
+  with_fileglob:
+    - "{{ nginx_confd_files }}"
+  notify: "Reload nginx service"
+
+- name: Copy modules-enabled files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/nginx/modules-enabled/{{ item | basename | regex_replace('(.j2)$', '') }}"
+  with_fileglob:
+    - "{{ nginx_modules_files }}"
+  notify: "Reload nginx service"
+
+- name: "Make sure {{ nginx_ssl_server_path }} exists"
+  file:
+    path: "{{ nginx_ssl_server_path }}"
+    state:  directory
+    mode: '0700'
+    owner: root
+    group: root
+
+- name: Copy ssl files
+  copy:
+    src: "{{ nginx_ssl_files }}"
+    dest: "{{ nginx_ssl_server_path }}"
+    owner: root
+    group: root
+    mode: '0600'
+    directory_mode: '0700'
+  notify: "Reload nginx service"
+
+- name: Copy sites-enabled files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/nginx/sites-enabled/{{ item | basename | regex_replace('(.j2)$', '') }}"
+  with_fileglob:
+    - "{{ nginx_sites_files }}"
+  notify: "Reload nginx service"
+
+- name: Copy snippets files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/nginx/snippets/{{ item | basename | regex_replace('(.j2)$', '') }}"
+  with_fileglob:
+    - "{{ nginx_snippets_files }}"
+  notify: "Reload nginx service"

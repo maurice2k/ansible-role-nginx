@@ -1,0 +1,12 @@
+---
+- name: Install nginx
+  apt:
+    name: "{{ ( nginx_default_packages + nginx_packages) }}"
+    update_cache: yes
+    state: present
+  notify: "Reload nginx service"
+
+- name: Remove default nginx site
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
